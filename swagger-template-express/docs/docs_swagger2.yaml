@@ -1,0 +1,528 @@
+---
+  info: 
+    description: "Описание"
+    title: "Название"
+    version: "1.0.0"
+    contact: 
+      email: "swdaniel@yandex.ru"
+  host: "localhost:5000"
+  basePath: "/"
+  produces: 
+    - "application/json"
+    - "application/xml"
+  schemes: 
+    - "http"
+    - "https"
+  securityDefinitions: 
+    JWT: 
+      type: "apiKey"
+      in: "header"
+      name: "Authorization"
+      description: ""
+  externalDocs: 
+    description: "Ссылка на внешнюю документацию"
+    url: "http://localhost:5000/docs"
+  swagger: "2.0"
+  paths: 
+    /auth/sign-up: 
+      post: 
+        parameters: 
+          - 
+            name: "input"
+            in: "body"
+            description: "Входные данные"
+            required: true
+            schema: 
+              $ref: "#/definitions/SignUpDto"
+        description: "Регистрация пользователя"
+        tags: 
+          - "Авторизация (пользователь)"
+        responses: 
+          201: 
+            description: "Авторизационные данные пользователя"
+            schema: 
+              $ref: "#/definitions/AuthDto"
+          default: 
+            description: "Ошибка запроса"
+            schema: 
+              $ref: "#/definitions/ApiError"
+    /auth/sign-in: 
+      post: 
+        parameters: 
+          - 
+            name: "input"
+            in: "body"
+            description: "Входные данные"
+            required: true
+            schema: 
+              $ref: "#/definitions/SignInDto"
+        description: "Авторизация пользовател"
+        tags: 
+          - "Авторизация (пользователь)"
+        responses: 
+          200: 
+            description: "Авторизационные данные пользователя"
+            schema: 
+              $ref: "#/definitions/AuthDto"
+          default: 
+            description: "Ошибка запроса"
+            schema: 
+              $ref: "#/definitions/ApiError"
+    /auth/logout: 
+      post: 
+        parameters: []
+        description: "Выход пользователя из системы"
+        tags: 
+          - "Авторизация (пользователь)"
+        responses: 
+          200: 
+            description: "Флаг, определяющий успех операции выхода пользователя из системы"
+            schema: 
+              $ref: "#/definitions/SuccessDto"
+          default: 
+            description: "Ошибка запроса"
+            schema: 
+              $ref: "#/definitions/ApiError"
+    /auth/management/sign-in: 
+      post: 
+        parameters: 
+          - 
+            name: "input"
+            in: "body"
+            description: "Входные данные"
+            required: true
+            schema: 
+              $ref: "#/definitions/SignInDto"
+        description: "Авторизация пользователя"
+        tags: 
+          - "Авторизация (для управляющего веб сайта)"
+        responses: 
+          200: 
+            description: "Авторизационные данные пользователя"
+            schema: 
+              $ref: "#/definitions/AuthDto"
+          default: 
+            description: "Ошибка запроса"
+            schema: 
+              $ref: "#/definitions/ApiError"
+    /auth/management/logout: 
+      post: 
+        parameters: []
+        description: "Авторизация пользователя"
+        tags: 
+          - "Авторизация (для управляющего веб сайта)"
+        responses: 
+          200: 
+            description: "Флаг, определяющий успех операции выхода пользователя из системы"
+            schema: 
+              $ref: "#/definitions/SuccessDto"
+          default: 
+            description: "Ошибка запроса"
+            schema: 
+              $ref: "#/definitions/ApiError"
+    /auth/activate: 
+      post: 
+        parameters: 
+          - 
+            name: "input"
+            in: "body"
+            description: "Входные данные"
+            required: true
+            schema: 
+              $ref: "#/definitions/ActivationLinkDto"
+        description: "Выход пользователя из системы"
+        tags: 
+          - "Авторизация (пользователь)"
+        responses: 
+          200: 
+            description: "Флаг, определяющий успех операции подтверждения пользователя"
+            schema: 
+              $ref: "#/definitions/SuccessDto"
+          default: 
+            description: "Ошибка запроса"
+            schema: 
+              $ref: "#/definitions/ApiError"
+    /auth/refresh/token: 
+      post: 
+        parameters: []
+        description: "Обновление токена доступа"
+        tags: 
+          - "Авторизация (пользователь)"
+        responses: 
+          201: 
+            description: "Авторизационные данные пользователя"
+            schema: 
+              $ref: "#/definitions/AuthDto"
+          default: 
+            description: "Ошибка запроса"
+            schema: 
+              $ref: "#/definitions/ApiError"
+    /creator/game/create: 
+      post: 
+        parameters: 
+          - 
+            name: "input"
+            in: "body"
+            description: "Входные данные"
+            required: true
+            schema: 
+              $ref: "#/definitions/GameCreateDto"
+        description: "Создание новой игры"
+        tags: 
+          - "Создатель (контент менеджер)"
+        responses: 
+          200: 
+            description: "Выходные данные"
+            schema: 
+              $ref: "#/definitions/GameCreateDto"
+          default: 
+            description: "Ошибка запроса"
+            schema: 
+              $ref: "#/definitions/ApiError"
+        operationId: "creatorGameCreate"
+        security: 
+          - 
+            JWT: []
+    /creator/games/created: 
+      get: 
+        parameters: []
+        description: "Просмотр списка созданных конкретным создателем игр"
+        tags: 
+          - "Создатель (контент менеджер)"
+        responses: 
+          200: 
+            description: "Выходные данные"
+            schema: 
+              type: "array"
+              items: 
+                $ref: "#/definitions/GamesCreatedDto"
+          default: 
+            description: "Ошибка запроса"
+            schema: 
+              $ref: "#/definitions/ApiError"
+        operationId: "creatorGamesCreated"
+        security: 
+          - 
+            JWT: []
+    /creator/game/delete: 
+      post: 
+        parameters: 
+          - 
+            name: "input"
+            in: "body"
+            description: "Входные данные"
+            required: true
+            schema: 
+              $ref: "#/definitions/GameDeleteDto"
+        description: "Удаление игры"
+        tags: 
+          - "Создатель (контент менеджер)"
+        responses: 
+          200: 
+            description: "Выходные данные"
+            schema: 
+              type: "array"
+              items: 
+                $ref: "#/definitions/GamesCreatedDto"
+          default: 
+            description: "Ошибка запроса"
+            schema: 
+              $ref: "#/definitions/ApiError"
+        operationId: "creatorGameDelete"
+        security: 
+          - 
+            JWT: []
+  definitions: 
+    ActivationLinkDto: 
+      properties: 
+        activation_link: 
+          type: "string"
+          description: ""
+    AttributeDto: 
+      properties: 
+        read: 
+          type: "boolean"
+          description: ""
+        write: 
+          type: "boolean"
+          description: ""
+        update: 
+          type: "boolean"
+          description: ""
+        delete: 
+          type: "boolean"
+          description: ""
+    AuthDto: 
+      properties: 
+        access_token-null: 
+          type: "string"
+          description: "Токен доступа"
+        refresh_token: 
+          $ref: "#/definitions/ModuleDto"
+        attributes-null: 
+          $ref: "#/definitions/AttributeDto"
+    LogoutDto: 
+      properties: 
+        access_token: 
+          type: "string"
+          description: ""
+        refresh_token: 
+          type: "string"
+          description: ""
+        type_auth: 
+          type: "number"
+          description: ""
+    ModuleDto: 
+      properties: 
+        player: 
+          type: "boolean"
+          description: ""
+        judge: 
+          type: "boolean"
+          description: ""
+        creator: 
+          type: "boolean"
+          description: ""
+        moderator: 
+          type: "boolean"
+          description: ""
+        manager: 
+          type: "boolean"
+          description: ""
+        admin: 
+          type: "boolean"
+          description: ""
+        super_admin: 
+          type: "boolean"
+          description: ""
+    RefreshDto: 
+      required: 
+        - "refresh_token"
+        - "type_auth"
+      properties: 
+        refresh_token: 
+          type: "string"
+          description: ""
+        type_auth: 
+          type: "number"
+          description: ""
+    SignInDto: 
+      required: 
+        - "email"
+        - "password"
+      properties: 
+        email: 
+          type: "string"
+          description: ""
+        password: 
+          type: "string"
+          description: ""
+    SignUpDto: 
+      required: 
+        - "email"
+        - "password"
+        - "phone_num"
+        - "location"
+        - "date_birthday"
+        - "nickname"
+        - "name"
+        - "surname"
+      properties: 
+        email: 
+          type: "string"
+          description: ""
+        password: 
+          type: "string"
+          description: ""
+        phone_num: 
+          type: "string"
+          description: ""
+        location: 
+          type: "string"
+          description: ""
+        date_birthday: 
+          type: "string"
+          description: ""
+        nickname: 
+          type: "string"
+          description: ""
+        name: 
+          type: "string"
+          description: ""
+        surname: 
+          type: "string"
+          description: ""
+    TokenDto: 
+      properties: 
+        access_token: 
+          type: "string"
+          description: ""
+        refresh_token: 
+          type: "string"
+          description: ""
+    GameCreateDto: 
+      required: 
+        - "location"
+        - "date_begin"
+        - "date_end"
+        - "type"
+        - "rating"
+        - "count_commands"
+        - "min_score"
+        - "age_limit"
+        - "name"
+        - "quests"
+      properties: 
+        location: 
+          type: "string"
+          description: ""
+        date_begin: 
+          type: "string"
+          description: ""
+        date_end: 
+          type: "string"
+          description: ""
+        type: 
+          type: "number"
+          description: ""
+        rating: 
+          type: "number"
+          description: ""
+        count_commands: 
+          type: "number"
+          description: ""
+        min_score: 
+          type: "number"
+          description: ""
+        age_limit: 
+          type: "number"
+          description: ""
+        name: 
+          type: "string"
+          description: ""
+        quests: 
+          type: "array"
+          items: 
+            $ref: "#/definitions/QuestDto"
+    GameDeleteDto: 
+      required: 
+        - "info_games_id"
+      properties: 
+        info_games_id: 
+          type: "number"
+          description: "Идентификатор игры"
+    GamesCreatedDto: 
+      properties: 
+        id: 
+          type: "number"
+          description: "уникальный идентификатор (обязательное поле)"
+        name: 
+          type: "string"
+          description: "название игры (обязательное поле)"
+        max_count_commands: 
+          type: "number"
+          description: "максимальное количество команд в игре"
+        date_begin: 
+          type: "string"
+          description: "дата начала задания в формате ISO 8601"
+        date_end: 
+          type: "string"
+          description: "дата окончания задания в формате ISO 8601"
+        age_limit: 
+          type: "number"
+          description: "ограничение по возрасту"
+        type: 
+          type: "number"
+          description: "тип задания"
+        rating: 
+          type: "number"
+          description: "рейтинг задания"
+        min_score: 
+          type: "number"
+          description: "минимальный балл для прохождения задания"
+        location: 
+          type: "string"
+          description: "местоположение задания"
+        created_at-null: 
+          type: "string"
+          description: "дата создания задания в формате ISO 8601"
+        updated_at: 
+          type: "string"
+          description: "дата последнего обновления задания в формате ISO 8601"
+        count_points-null: 
+          type: "number"
+          description: "количество баллов за прохождение задания"
+        warnings: 
+          type: "array"
+          description: "массив предупреждений"
+        bans: 
+          type: "array"
+          description: "массив запретов"
+        accepted: 
+          type: "boolean"
+          description: "флаг, указывающий на принятие задания"
+    QuestDto: 
+      properties: 
+        task: 
+          type: "string"
+          description: ""
+        hint: 
+          type: "string"
+          description: ""
+        radius: 
+          type: "number"
+          description: ""
+        ref_media: 
+          type: "string"
+          description: ""
+        marks_id: 
+          type: "number"
+          description: ""
+    FlagDto: 
+      properties: 
+        flag: 
+          type: "boolean"
+          description: ""
+    SuccessDto: 
+      properties: 
+        success: 
+          type: "boolean"
+          description: ""
+    ApiError: 
+      properties: 
+        message: 
+          type: "string"
+          description: ""
+        errors: 
+          type: "array"
+          items: 
+            $ref: "#/definitions/FieldError"
+    FieldError: 
+      properties: 
+        type: 
+          type: "string"
+          description: ""
+        value: 
+          type: "string"
+          description: ""
+        msg: 
+          type: "string"
+          description: ""
+        path: 
+          type: "string"
+          description: ""
+        location: 
+          type: "string"
+          description: ""
+  responses: {}
+  parameters: {}
+  tags: 
+    - 
+      name: "Авторизация (пользователь)"
+      description: "Функции для авторизации пользователя"
+    - 
+      name: "Авторизация (для управляющего веб сайта)"
+      description: "Функция для авторизации пользователя"
+    - 
+      name: "Создатель (контент менеджер)"
+      description: "Функции для наполнения контентом"

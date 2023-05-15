@@ -1,0 +1,6 @@
+{
+    "port": "5000",
+    "doc": {
+        "swagger2": false
+    }
+}
